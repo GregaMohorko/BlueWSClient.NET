@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BlueWSClient.NET</name>
+    </assembly>
+    <members>
+        <member name="P:BlueWSClient.NET.Net.BlueWebClient.Timeout">
+            <summary>
+            Gets or sets the length of time, in milliseconds, before the request times out.
+            </summary>
+        </member>
+        <member name="M:BlueWSClient.NET.Net.BlueWebClient.UploadValues(System.String,System.Collections.Specialized.NameValueCollection,BlueWSClient.NET.Net.HttpMethod)">
+            <summary>
+            Uploads the specified name/value collection to the resource identified by the specified URI.
+            </summary>
+            <param name="address">The URI of the resource to receive the collection.</param>
+            <param name="data">The NameValueCollection to send to the resource.</param>
+            <param name="method">The http method used to send data to the resource. Allowed methods are POST and GET.</param>
+        </member>
+        <member name="T:BlueWSClient.NET.Net.BlueWebClient.BlueWebClientInternal">
+            <summary>
+            Solution for timeout came from here: http://w3ka.blogspot.si/2009/12/how-to-fix-webclient-timeout-issue.html
+            </summary>
+        </member>
+        <member name="P:BlueWSClient.NET.Net.BlueWebClient.BlueWebClientInternal.Timeout">
+            <summary>
+            Gets or sets the length of time, in milliseconds, before the request times out.
+            </summary>
+        </member>
+        <member name="M:BlueWSClient.NET.Net.BlueWebClient.BlueWebClientInternal.GetWebRequest(System.Uri)">
+            <summary>
+            Overriden just for added functionality of timeout.
+            </summary>
+        </member>
+        <member name="T:BlueWSClient.NET.Requests.PostLoginRequest`1">
+            <summary>
+            The request type for post login actions.
+            </summary>
+            <typeparam name="T">The type of the server response.</typeparam>
+        </member>
+        <member name="P:BlueWSClient.NET.Requests.PostLoginRequest`1.UserDenied">
+            <summary>
+            If true, indicates that the user access was denied.
+            </summary>
+        </member>
+        <member name="P:BlueWSClient.NET.Requests.PostLoginRequest`1.UserDeniedReason">
+            <summary>
+            The reason why the user access was denied.
+            </summary>
+        </member>
+        <member name="T:BlueWSClient.NET.Requests.Request`1">
+            <summary>
+            Represents a request to the web service server.
+            </summary>
+            <typeparam name="T">The type of the server response.</typeparam>
+        </member>
+        <member name="F:BlueWSClient.NET.Requests.Request`1.WebService">
+            <summary>
+            Gets the WebService associated with this request.
+            </summary>
+        </member>
+        <member name="F:BlueWSClient.NET.Requests.Request`1.Parameters">
+            <summary>
+            Parameters to be sent to the server.
+            </summary>
+        </member>
+        <member name="P:BlueWSClient.NET.Requests.Request`1.Success">
+            <summary>
+            True if everything was successful.
+            </summary>
+        </member>
+        <member name="P:BlueWSClient.NET.Requests.Request`1.Response">
+            <summary>
+            Decoded server response.
+            </summary>
+        </member>
+        <member name="P:BlueWSClient.NET.Requests.Request`1.RawResponse">
+            <summary>
+            Raw server response.
+            </summary>
+        </member>
+        <member name="P:BlueWSClient.NET.Requests.Request`1.NoNetwork">
+            <summary>
+            True if the web service call was unsuccessful due to no internet connection.
+            </summary>
+        </member>
+        <member name="P:BlueWSClient.NET.Requests.Request`1.Action">
+            <summary>
+            The action that was called.
+            </summary>
+        </member>
+        <member name="M:BlueWSClient.NET.Requests.Request`1.#ctor(BlueWSClient.NET.WebService)">
+            <summary>
+            Creates a new request for the provided web service.
+            </summary>
+            <param name="webService">The web service on which to make the request.</param>
+        </member>
+        <member name="M:BlueWSClient.NET.Requests.Request`1.CallAsyncTask(System.String)">
+            <summary>
+            Calls the associated server with the specified action as an asynchronous action.
+            </summary>
+            <param name="action">The name of the action to call.</param>
+        </member>
+        <member name="M:BlueWSClient.NET.Requests.Request`1.Call(System.String)">
+            <summary>
+            Calls the associated server with the specified action.
+            </summary>
+            <param name="action">The name of the action to call.</param>
+        </member>
+        <member name="M:BlueWSClient.NET.Requests.Request`1.ParseServerResponse(System.String)">
+            <summary>
+            Override this method if you want to parse the server response yourself. The default implementation uses Newtonsoft.Json.JsonConvert.DeserializeObject method.
+            </summary>
+            <param name="rawResponse">Raw server response to parse.</param>
+        </member>
+        <member name="M:BlueWSClient.NET.Requests.Request`1.OnParseSuccess">
+            <summary>
+            Override this method if you want to do something when the raw server response is parsed.
+            </summary>
+        </member>
+        <member name="M:BlueWSClient.NET.Requests.Request`1.OnParseFailure(System.Exception)">
+            <summary>
+            Override this method if you want to do something when the raw server response could not be parsed.
+            </summary>
+            <param name="e">The exception thrown while parsing.</param>
+        </member>
+        <member name="F:BlueWSClient.NET.WebService.ServerAddress">
+            <summary>
+            The address of the .php script on which to call the actions.
+            </summary>
+        </member>
+        <member name="F:BlueWSClient.NET.WebService.HttpMethod">
+            <summary>
+            The http method used to send data to the server. Allowed methods are POST and GET.
+            </summary>
+        </member>
+        <member name="M:BlueWSClient.NET.WebService.#ctor(System.String,BlueWSClient.NET.Net.HttpMethod)">
+            <param name="serverAddress">The address of the .php script on which to call the actions.</param>
+            <param name="httpMethod">The http method used to send data to the server. Allowed methods are POST and GET.</param>
+        </member>
+    </members>
+</doc>
