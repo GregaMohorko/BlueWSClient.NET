@@ -40,5 +40,10 @@ YourClass response = request.Call("TestAction");
 ## Requirements
 .NET Framework 4.6.1
 
-## License
+## Author and License
+
+Grega Mohorko ([www.mohorko.info](http://www.mohorko.info))
+
+Copyright (c) 2017 Grega Mohorko
+
 [Apache License 2.0](./LICENSE)
