@@ -1,7 +1,7 @@
 # BlueWSClient.NET
 A client library in .NET for [BlueWS](https://github.com/GregaMohorko/BlueWS) library. Includes logic and utility for calling BlueWS web service actions.
 
-Latest release: [v1.0](https://github.com/GregaMohorko/BlueWSClient.NET/releases/latest)
+[![Release](https://img.shields.io/github/release/GregaMohorko/BlueWSClient.NET.svg?style=flat-square)](https://github.com/GregaMohorko/BlueWSClient.NET/releases/latest)
 
 ## Documentation & Tutorials
 You can read the documentation and tutorials under the [Wiki](https://github.com/GregaMohorko/BlueWSClient.NET/wiki).
