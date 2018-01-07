@@ -1,5 +1,7 @@
-﻿/*
-   Copyright 2018 Grega Mohorko
+﻿extensions: designer.cs generated.cs
+extensions: .cs
+/*
+   Copyright %CurrentYear% Grega Mohorko
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,23 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
-Project: BlueWSClient.NET
-Created: 2018-1-7
-Author: GregaMohorko
+Project: %Project%
+Created: %CreationYear%-%CreationMonth%-%CreationDay%
+Author: %UserName%
 */
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BlueWSClient.NET.Net
-{
-	public enum HttpMethod
-	{
-		Unknown=0,
-		Get=1,
-		Post=2
-	}
-}
