@@ -112,10 +112,10 @@ namespace BlueWS.Net
 			return webClient.DownloadString(address);
 		}
 
-		private async Task<string> UploadValuesGetAsyncTask(string address,NameValueCollection data)
+		private Task<string> UploadValuesGetAsyncTask(string address,NameValueCollection data)
 		{
 			AddGetParameters(ref address, data);
-			return await webClient.DownloadStringTaskAsync(address);
+			return webClient.DownloadStringTaskAsync(address);
 		}
 
 		private void AddGetParameters(ref string address,NameValueCollection data)
@@ -138,10 +138,14 @@ namespace BlueWS.Net
 			return BytesToString(byteArray);
 		}
 
-		private async Task<string> UploadValuesPostAsyncTask(string address,NameValueCollection data)
+		private Task<string> UploadValuesPostAsyncTask(string address,NameValueCollection data)
 		{
-			byte[] byteArray = await webClient.UploadValuesTaskAsync(address, data);
-			return BytesToString(byteArray);
+			return webClient.UploadValuesTaskAsync(address, data)
+				.ContinueWith(antecendent =>
+				{
+					byte[] byteArray = antecendent.Result;
+					return BytesToString(byteArray);
+				},TaskContinuationOptions.ExecuteSynchronously);
 		}
 
 		private string BytesToString(byte[] bytes)
