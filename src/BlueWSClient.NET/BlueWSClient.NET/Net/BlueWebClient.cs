@@ -28,23 +28,39 @@ using System.Threading.Tasks;
 
 namespace BlueWS.Net
 {
+	/// <summary>
+	/// A BlueWS version of <see cref="WebClient"/> with added functionalities.
+	/// </summary>
 	public class BlueWebClient : IDisposable
 	{
+		/// <summary>
+		/// Default timeout.
+		/// </summary>
 		public const int DEFAULT_TIMEOUT = 10000;
 
 		private readonly BlueWebClientInternal webClient;
 
+		/// <summary>
+		/// Creates a new instance of <see cref="BlueWebClient"/> with default timeout.
+		/// </summary>
 		public BlueWebClient() : this(DEFAULT_TIMEOUT) { }
 
+		/// <summary>
+		/// Creates a new instance of <see cref="BlueWebClient"/> with the specified timeout.
+		/// </summary>
+		/// <param name="timeout">The length of time, in milliseconds, before the request times out.</param>
 		public BlueWebClient(int timeout)
 		{
 			webClient = new BlueWebClientInternal();
 			Timeout = timeout;
 		}
 
+		/// <summary>
+		/// Releases all resources used by this web client.
+		/// </summary>
 		public void Dispose()
 		{
-			webClient.Dispose();
+			webClient?.Dispose();
 		}
 
 		/// <summary>
@@ -73,6 +89,12 @@ namespace BlueWS.Net
 			throw new NotImplementedException("Unsupported http method.");
 		}
 
+		/// <summary>
+		/// Asynchronously uploads the specified name/value collection to the resource identified by the specified URI.
+		/// </summary>
+		/// <param name="address">The URI of the resource to receive the collection.</param>
+		/// <param name="data">The NameValueCollection to send to the resource.</param>
+		/// <param name="method">The http method used to send data to the resource. Allowed methods are POST and GET.</param>
 		public Task<string> UploadValuesAsyncTask(string address,NameValueCollection data,HttpMethod method)
 		{
 			switch(method) {

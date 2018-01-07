@@ -27,6 +27,9 @@ using BlueWS.Net;
 
 namespace BlueWS
 {
+	/// <summary>
+	/// A web service with information about the server address and the http method to be used for requests.
+	/// </summary>
 	public class WebService
 	{
 		/// <summary>

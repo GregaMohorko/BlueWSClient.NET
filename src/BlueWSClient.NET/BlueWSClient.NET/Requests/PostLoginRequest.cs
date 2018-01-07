@@ -46,8 +46,15 @@ namespace BlueWS.Requests
 		/// </summary>
 		public string UserDeniedReason { get; private set; }
 
+		/// <summary>
+		/// Creates a new instance of <see cref="PostLoginRequest{T}"/>.
+		/// </summary>
+		/// <param name="webService">The web service of the request.</param>
 		public PostLoginRequest(WebService webService) : base(webService) { }
 
+		/// <summary>
+		/// Checks if the user was denied.
+		/// </summary>
 		protected override void OnParseSuccess()
 		{
 			if(typeof(T) == typeof(JObject)) {
@@ -55,6 +62,9 @@ namespace BlueWS.Requests
 			}
 		}
 
+		/// <summary>
+		/// Tries to parse as <see cref="JObject"/> and then checks if the user was denied.
+		/// </summary>
 		protected void OnParseFailure()
 		{
 			JObject response;
