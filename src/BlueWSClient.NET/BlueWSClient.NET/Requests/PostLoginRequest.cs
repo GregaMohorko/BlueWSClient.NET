@@ -29,7 +29,7 @@ using Newtonsoft.Json.Linq;
 namespace BlueWS.Requests
 {
 	/// <summary>
-	/// The request type for post login actions.
+	/// An example of a request type for post login actions.
 	/// </summary>
 	/// <typeparam name="T">The type of the server response.</typeparam>
 	public class PostLoginRequest<T> : Request<T>
@@ -39,7 +39,7 @@ namespace BlueWS.Requests
 		/// <summary>
 		/// If true, indicates that the user access was denied.
 		/// </summary>
-		public bool UserDenied { get { return UserDeniedReason != null; } }
+		public bool UserDenied => UserDeniedReason != null;
 
 		/// <summary>
 		/// The reason why the user access was denied.

@@ -28,8 +28,8 @@ namespace BlueWS.Net
 {
 	public enum HttpMethod
 	{
-		Unknown=0,
-		Get=1,
-		Post=2
+		UNKNOWN=0,
+		GET=1,
+		POST=2
 	}
 }

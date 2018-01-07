@@ -5,20 +5,20 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BlueWSClient.NET.Net;
-using BlueWSClient.NET.Requests;
+using BlueWS.Net;
+using BlueWS.Requests;
 using Newtonsoft.Json.Linq;
 
-namespace BlueWSClient.NET.Test
+namespace BlueWS.Test
 {
 	class Program
 	{
 		// please set your own server address
-		const string serverAddress = "http://psis2.mohorko.info/test/";
+		private const string SERVER_ADDRESS = "http://psis2.mohorko.info/test/";
 
 		static void Main(string[] args)
 		{
-			WebService webService = new WebService(serverAddress,HttpMethod.Get);
+			WebService webService = new WebService(SERVER_ADDRESS,HttpMethod.GET);
 
 			// examples below are testing actions in the BlueWS repository in the /test folder
 			// you can test your own actions in the same manner

@@ -52,8 +52,8 @@ namespace BlueWS.Net
 		/// </summary>
 		public int Timeout
 		{
-			get { return webClient.Timeout; }
-			set { webClient.Timeout = value; }
+			get => webClient.Timeout;
+			set => webClient.Timeout = value;
 		}
 
 		/// <summary>
@@ -65,9 +65,9 @@ namespace BlueWS.Net
 		public string UploadValues(string address,NameValueCollection data,HttpMethod method)
 		{
 			switch(method) {
-				case HttpMethod.Get:
+				case HttpMethod.GET:
 					return UploadValuesGet(address, data);
-				case HttpMethod.Post:
+				case HttpMethod.POST:
 					return UploadValuesPost(address, data);
 			}
 			throw new NotImplementedException("Unsupported http method.");
@@ -76,9 +76,9 @@ namespace BlueWS.Net
 		public Task<string> UploadValuesAsyncTask(string address,NameValueCollection data,HttpMethod method)
 		{
 			switch(method) {
-				case HttpMethod.Get:
+				case HttpMethod.GET:
 					return UploadValuesGetAsyncTask(address, data);
-				case HttpMethod.Post:
+				case HttpMethod.POST:
 					return UploadValuesPostAsyncTask(address, data);
 			}
 			throw new NotImplementedException("Unsupported http method.");
