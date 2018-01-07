@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlueWSClient.NET.Net
+namespace BlueWS.Net
 {
 	public enum HttpMethod
 	{

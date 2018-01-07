@@ -23,9 +23,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BlueWSClient.NET.Net;
+using BlueWS.Net;
 
-namespace BlueWSClient.NET
+namespace BlueWS
 {
 	public class WebService
 	{

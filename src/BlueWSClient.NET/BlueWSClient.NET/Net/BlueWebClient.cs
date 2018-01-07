@@ -26,7 +26,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlueWSClient.NET.Net
+namespace BlueWS.Net
 {
 	public class BlueWebClient : IDisposable
 	{

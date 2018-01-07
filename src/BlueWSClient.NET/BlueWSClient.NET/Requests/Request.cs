@@ -25,10 +25,10 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using BlueWSClient.NET.Net;
+using BlueWS.Net;
 using Newtonsoft.Json;
 
-namespace BlueWSClient.NET.Requests
+namespace BlueWS.Requests
 {
 	/// <summary>
 	/// Represents a request to the web service server.
@@ -155,7 +155,7 @@ namespace BlueWSClient.NET.Requests
 		}
 
 		/// <summary>
-		/// Override this method if you want to parse the server response yourself. The default implementation uses Newtonsoft.Json.JsonConvert.DeserializeObject method.
+		/// Override this method if you want to parse the server response yourself. The default implementation uses <see cref="JsonConvert.DeserializeObject{T}(string)"/> method.
 		/// </summary>
 		/// <param name="rawResponse">Raw server response to parse.</param>
 		protected virtual T ParseServerResponse(string rawResponse)
