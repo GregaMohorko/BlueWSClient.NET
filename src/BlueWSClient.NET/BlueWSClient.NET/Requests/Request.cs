@@ -132,8 +132,10 @@ namespace BlueWS.Requests
 			// set it to false, and only set it to true after, when everything is ok
 			Success = false;
 
-			NameValueCollection data = new NameValueCollection();
-			data.Add("action", action);
+			NameValueCollection data = new NameValueCollection
+			{
+				{ "action", action }
+			};
 			if(Parameters.Count > 0) {
 				object value = Parameters.Count == 1 ? Parameters[0] : Parameters;
 				string json = JsonConvert.SerializeObject(value);
