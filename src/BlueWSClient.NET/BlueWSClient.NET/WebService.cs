@@ -41,13 +41,23 @@ namespace BlueWS
 		/// The http method used to send data to the server. Allowed methods are POST and GET.
 		/// </summary>
 		public readonly HttpMethod HttpMethod;
-		
+
+		/// <summary>
+		/// Determines whether to throw exceptions or not when a request failes (due to no network, server errors, etc.). Default is <c>true</c>.
+		/// </summary>
+		public readonly bool IsThrowable;
+
+		/// <summary>
+		/// Creates a new instance of <see cref="WebService"/>.
+		/// </summary>
 		/// <param name="serverAddress">The address of the .php script on which to call the actions.</param>
 		/// <param name="httpMethod">The http method used to send data to the server. Allowed methods are POST and GET.</param>
-		public WebService(string serverAddress,HttpMethod httpMethod)
+		/// <param name="isThrowable">Determines whether to throw exceptions or not when a request failes (due to no network, server errors, etc.). Default is <c>true</c>.</param>
+		public WebService(string serverAddress,HttpMethod httpMethod, bool isThrowable=true)
 		{
 			ServerAddress = serverAddress;
 			HttpMethod = httpMethod;
+			IsThrowable = isThrowable;
 		}
 	}
 }

@@ -18,7 +18,7 @@ namespace BlueWS.Test
 
 		static void Main(string[] args)
 		{
-			WebService webService = new WebService(SERVER_ADDRESS,HttpMethod.GET);
+			WebService webService = new WebService(SERVER_ADDRESS,HttpMethod.GET,false);
 
 			// examples below are testing actions in the BlueWS repository in the /test folder
 			// you can test your own actions in the same manner
@@ -68,7 +68,7 @@ namespace BlueWS.Test
 			Console.WriteLine();
 
 			Request<JObject> request = new Request<JObject>(webService);
-			JObject response = request.Call("TestAction2");
+			JObject response = request.Call();
 			Debug.Assert(!request.Success);
 			Debug.Assert(!request.NoNetwork);
 			Debug.Assert(request.RawResponse != null);
@@ -83,7 +83,7 @@ namespace BlueWS.Test
 			Console.WriteLine();
 
 			Request<JObject> request = new Request<JObject>(webService);
-			JObject response = request.Call("TestAction3");
+			JObject response = request.Call();
 			CheckResult(request, response);
 			string explanation = response.Value<string>("Explanation");
 			Debug.Assert(explanation == "You did something wrong.");
@@ -96,7 +96,7 @@ namespace BlueWS.Test
 			Console.WriteLine();
 
 			PostLoginRequest<JObject> request = new PostLoginRequest<JObject>(webService);
-			JObject response = request.Call("TestAction4");
+			JObject response = request.Call();
 			CheckResult(request, response);
 			string message = response.Value<string>("Message");
 			Debug.Assert(message == "Success");
@@ -111,7 +111,7 @@ namespace BlueWS.Test
 			Console.WriteLine();
 
 			PostLoginRequest<JObject> request = new PostLoginRequest<JObject>(webService);
-			JObject response = request.Call("TestAction5");
+			JObject response = request.Call();
 			Debug.Assert(!request.Success);
 			Debug.Assert(!request.NoNetwork);
 			Debug.Assert(request.RawResponse != null);
@@ -128,7 +128,7 @@ namespace BlueWS.Test
 			Console.WriteLine();
 
 			PostLoginRequest<JObject> request = new PostLoginRequest<JObject>(webService);
-			JObject response = request.Call("TestAction6");
+			JObject response = request.Call();
 			CheckResult(request, response);
 			string message = response.Value<string>("Message");
 			Debug.Assert(message == "Success");
@@ -143,7 +143,7 @@ namespace BlueWS.Test
 			Console.WriteLine();
 
 			Request<JObject> request = new Request<JObject>(webService);
-			JObject response = request.Call("TestAction7");
+			JObject response = request.Call();
 			CheckResult(request, response);
 			int actionParameter = response.Value<int>("ActionParameter");
 			Debug.Assert(actionParameter == 42);
@@ -157,7 +157,7 @@ namespace BlueWS.Test
 
 			// sending no data
 			Request<JObject> request = new Request<JObject>(webService);
-			JObject response = request.Call("TestAction8");
+			JObject response = request.Call();
 			CheckResult(request, response);
 			Debug.Assert(response.Count == 1);
 			JProperty dataProperty = response.AsJEnumerable().Single() as JProperty;
@@ -169,8 +169,8 @@ namespace BlueWS.Test
 			// sending an integer
 			request = new Request<JObject>(webService);
 			int sentInteger = 42;
-			request.Parameters.Add(sentInteger);
-			response = request.Call("TestAction8");
+			request.Parameters.Add("SentInteger",sentInteger);
+			response = request.Call();
 			CheckResult(request, response);
 			int returnedInteger = response.Value<int>("data");
 			Debug.Assert(returnedInteger == sentInteger);
@@ -178,8 +178,8 @@ namespace BlueWS.Test
 			// sending three integers
 			request = new Request<JObject>(webService);
 			List<int> sentIntegers = new List<int>(){ 27, 42, 67 };
-			sentIntegers.ForEach(i => request.Parameters.Add(i));
-			response = request.Call("TestAction8");
+			sentIntegers.ForEach(i => request.Parameters.Add(i.ToString(),i));
+			response = request.Call();
 			CheckResult(request, response);
 			List<int> returnedIntegers = response.Value<JArray>("data").Select(jt => jt.Value<int>()).ToList();
 			Debug.Assert(returnedIntegers.SequenceEqual(sentIntegers));
@@ -193,7 +193,7 @@ namespace BlueWS.Test
 
 			// the sync version
 			Request<JObject> request = new Request<JObject>(webService);
-			JObject response = request.Call("TestAction0");
+			JObject response = request.Call();
 			Debug.Assert(!request.Success);
 			Debug.Assert(!request.NoNetwork);
 			Debug.Assert(request.RawResponse != null);
@@ -201,7 +201,7 @@ namespace BlueWS.Test
 
 			// the async version
 			request = new Request<JObject>(webService);
-			response = await request.CallAsyncTask("TestAction0");
+			response = await request.CallAsyncTask();
 			Debug.Assert(!request.Success);
 			Debug.Assert(!request.NoNetwork);
 			Debug.Assert(request.RawResponse != null);

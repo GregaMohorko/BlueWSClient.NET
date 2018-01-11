@@ -65,16 +65,18 @@ namespace BlueWS.Requests
 		/// <summary>
 		/// Tries to parse as <see cref="JObject"/> and then checks if the user was denied.
 		/// </summary>
-		protected void OnParseFailure()
+		protected override FailedParseAction OnParseFailure(Exception e)
 		{
 			JObject response;
 			try {
 				response = JsonConvert.DeserializeObject<JObject>(RawResponse);
 			} catch(Exception) {
-				return;
+				return FailedParseAction.THROW;
 			}
 
 			CheckIfUserDenied(response);
+
+			return FailedParseAction.HANDLED;
 		}
 
 		private void CheckIfUserDenied(JObject response)

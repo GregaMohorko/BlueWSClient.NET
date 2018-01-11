@@ -23,12 +23,13 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using BlueWS.Net;
 using Newtonsoft.Json;
 
-namespace BlueWS.Requests
+namespace BlueWS
 {
 	/// <summary>
 	/// Represents a request to the web service server.
@@ -44,7 +45,7 @@ namespace BlueWS.Requests
 		/// <summary>
 		/// Parameters to be sent to the server.
 		/// </summary>
-		public List<object> Parameters;
+		public readonly Dictionary<string,object> Parameters;
 
 		/// <summary>
 		/// True if everything was successful.
@@ -75,85 +76,125 @@ namespace BlueWS.Requests
 		public Request(WebService webService)
 		{
 			WebService = webService;
-			Parameters = new List<object>();
+			Parameters = new Dictionary<string, object>();
 		}
 
 		/// <summary>
 		/// Calls the associated server with the specified action as an asynchronous action.
+		/// <para>If the action is not specified, it will be set to the name of the calling method.</para>
 		/// </summary>
 		/// <param name="action">The name of the action to call.</param>
-		public async Task<T> CallAsyncTask(string action)
+		[MethodImpl(MethodImplOptions.NoInlining)]
+		public async Task<T> CallAsyncTask(string action=null)
 		{
+			if(action == null) {
+				action = GetCallingMethod().Name;
+			}
+
 			NameValueCollection data=BeforeCalling(action);
 
 			try {
 				string address = WebService.ServerAddress;
 				HttpMethod httpMethod = WebService.HttpMethod;
-				using(BlueWebClient webClient = new BlueWebClient()) {
+				using(var webClient = new BlueWebClient()) {
 					RawResponse = await webClient.UploadValuesAsyncTask(address, data, httpMethod);
 				}
-			} catch(WebException) {
-				NoNetwork = true;
-				return default(T);
+				AfterCalling();
+			} catch(WebException e) {
+				OnWebException(e);
 			}
-
-			AfterCalling();
-
+			
 			return Response;
 		}
 
 		/// <summary>
 		/// Calls the associated server with the specified action.
+		/// <para>If the action is not specified, it will be set to the name of the calling method.</para>
 		/// </summary>
 		/// <param name="action">The name of the action to call.</param>
-		public T Call(string action)
+		[MethodImpl(MethodImplOptions.NoInlining)]
+		public T Call(string action=null)
 		{
+			if(action == null) {
+				action = GetCallingMethod().Name;
+			}
+
 			NameValueCollection data = BeforeCalling(action);
 			
 			try {
 				string address = WebService.ServerAddress;
 				HttpMethod httpMethod = WebService.HttpMethod;
-				using(BlueWebClient webClient=new BlueWebClient()) {
+				using(var webClient=new BlueWebClient()) {
 					RawResponse = webClient.UploadValues(address, data, httpMethod);
 				}
-			} catch(WebException) {
-				NoNetwork = true;
-				return default(T);
+				AfterCalling();
+			} catch(WebException e) {
+				OnWebException(e);
 			}
-
-			AfterCalling();
-
+			
 			return Response;
 		}
 
+		private void OnWebException(WebException e)
+		{
+			NoNetwork = true;
+			if(WebService.IsThrowable) {
+				throw e;
+			}
+		}
+
+		/// <summary>
+		/// Resets all the request info and serializes the parameters to prepare the data to be sent to the server.
+		/// </summary>
+		/// <param name="action">The action to be called.</param>
 		private NameValueCollection BeforeCalling(string action)
 		{
 			Action = action;
 			// set it to false, and only set it to true after, when everything is ok
 			Success = false;
+			RawResponse = null;
+			Response = default(T);
+			NoNetwork = false;
 
-			NameValueCollection data = new NameValueCollection
+			var data = new NameValueCollection
 			{
 				{ "action", action }
 			};
 			if(Parameters.Count > 0) {
-				object value = Parameters.Count == 1 ? Parameters[0] : Parameters;
-				string json = JsonConvert.SerializeObject(value);
-				data.Add("data", json);
+				string serializedParameters = SerializeParameters();
+				data.Add("data", serializedParameters);
 			}
 
 			return data;
 		}
 
+		/// <summary>
+		/// Tries to parse the raw response.
+		/// </summary>
 		private void AfterCalling()
 		{
 			try {
 				Response = ParseServerResponse(RawResponse);
 				Success = true;
-				OnParseSuccess();
 			} catch(Exception e) {
-				OnParseFailure(e);
+				FailedParseAction result = OnParseFailure(e);
+				if(WebService.IsThrowable && result==FailedParseAction.THROW) {
+					throw e;
+				}
+				if(result != FailedParseAction.REPARSED) {
+					return;
+				}
 			}
+
+			OnParseSuccess();
+		}
+
+		/// <summary>
+		/// Override this method if you want to serialize the <see cref="Parameters"/> to be sent to the server yourself. The default implementation uses <see cref="JsonConvert.SerializeObject(object)"/> method.
+		/// </summary>
+		protected virtual string SerializeParameters()
+		{
+			return JsonConvert.SerializeObject(Parameters);
 		}
 
 		/// <summary>
@@ -174,6 +215,28 @@ namespace BlueWS.Requests
 		/// Override this method if you want to do something when the raw server response could not be parsed.
 		/// </summary>
 		/// <param name="e">The exception thrown while parsing.</param>
-		protected virtual void OnParseFailure(Exception e) { }
+		protected virtual FailedParseAction OnParseFailure(Exception e)
+		{
+			return FailedParseAction.THROW;
+		}
+
+		/// <summary>
+		/// Determines the action after a parse attempt has failed.
+		/// </summary>
+		public enum FailedParseAction
+		{
+			/// <summary>
+			/// Means that the exception was not handled and that it should be thrown.
+			/// </summary>
+			THROW,
+			/// <summary>
+			/// Means that the exception was handled, but the parsing was still not done, so the method <see cref="OnParseSuccess"/> will not be called.
+			/// </summary>
+			HANDLED,
+			/// <summary>
+			/// Means that you have manually re-parsed the <see cref="RawResponse"/> successfully and that <see cref="OnParseSuccess"/> should be called normally.
+			/// </summary>
+			REPARSED
+		}
 	}
 }
