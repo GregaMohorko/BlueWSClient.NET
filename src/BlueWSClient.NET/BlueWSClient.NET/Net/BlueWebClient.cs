@@ -138,14 +138,10 @@ namespace BlueWS.Net
 			return BytesToString(byteArray);
 		}
 
-		private Task<string> UploadValuesPostAsyncTask(string address,NameValueCollection data)
+		private async Task<string> UploadValuesPostAsyncTask(string address,NameValueCollection data)
 		{
-			return webClient.UploadValuesTaskAsync(address, data)
-				.ContinueWith(antecendent =>
-				{
-					byte[] byteArray = antecendent.Result;
-					return BytesToString(byteArray);
-				},TaskContinuationOptions.ExecuteSynchronously);
+			byte[] byteArray = await webClient.UploadValuesTaskAsync(address, data);
+			return BytesToString(byteArray);
 		}
 
 		private string BytesToString(byte[] bytes)
