@@ -80,26 +80,16 @@ namespace BlueWS
 		}
 
 		/// <summary>
-		/// Calls the associated server with the specified action as an asynchronous action.
+		/// Gets the method that called the current method where this method is used. This does not work when used in async methods.
+		/// <para>
+		/// Note that because of compiler optimization, you should add <see cref="MethodImplAttribute"/> to the method where this method is used and use the <see cref="MethodImplOptions.NoInlining"/> value.
+		/// </para>
 		/// </summary>
-		/// <param name="action">The name of the action to call.</param>
 		[MethodImpl(MethodImplOptions.NoInlining)]
-		public async Task<T> CallAsyncTask(string action)
+		public static System.Reflection.MethodBase GetCallingMethod()
 		{
-			NameValueCollection data=BeforeCalling(action);
-
-			try {
-				string address = WebService.ServerAddress;
-				HttpMethod httpMethod = WebService.HttpMethod;
-				using(var webClient = new BlueWebClient()) {
-					RawResponse = await webClient.UploadValuesAsyncTask(address, data, httpMethod);
-				}
-				AfterCalling();
-			} catch(WebException e) {
-				OnWebException(e);
-			}
-			
-			return Response;
+			// FIXME GM.Utility
+			return new System.Diagnostics.StackFrame(2, false)?.GetMethod();
 		}
 
 		/// <summary>
@@ -108,19 +98,48 @@ namespace BlueWS
 		/// </summary>
 		/// <param name="action">The name of the action to call.</param>
 		[MethodImpl(MethodImplOptions.NoInlining)]
-		public T Call(string action=null)
+		public T Call(string action = null)
 		{
 			if(action == null) {
 				action = GetCallingMethod().Name;
 			}
 
 			NameValueCollection data = BeforeCalling(action);
-			
+
 			try {
 				string address = WebService.ServerAddress;
 				HttpMethod httpMethod = WebService.HttpMethod;
-				using(var webClient=new BlueWebClient()) {
+				using(var webClient = new BlueWebClient()) {
 					RawResponse = webClient.UploadValues(address, data, httpMethod);
+				}
+				AfterCalling();
+			} catch(WebException e) {
+				OnWebException(e);
+			}
+
+			return Response;
+		}
+
+		/// <summary>
+		/// Calls the associated server with the specified action as an asynchronous action.
+		/// <para> If the action ends with the phrase "AsyncTask", that phrase will be cut out. So you can use <c>nameof</c>.</para>
+		/// </summary>
+		/// <param name="action">The name of the action to call. If it ends with the phrase "AsyncTask", that phrase will be cut out. So you can use <c>nameof</c>.</param>
+		[MethodImpl(MethodImplOptions.NoInlining)]
+		public async Task<T> CallAsyncTask(string action)
+		{
+			if(action.EndsWith("AsyncTask")) {
+				// "AsyncTask".Length == 9
+				action = action.Substring(0, action.Length - 9);
+			}
+
+			NameValueCollection data=BeforeCalling(action);
+
+			try {
+				string address = WebService.ServerAddress;
+				HttpMethod httpMethod = WebService.HttpMethod;
+				using(var webClient = new BlueWebClient()) {
+					RawResponse = await webClient.UploadValuesAsyncTask(address, data, httpMethod);
 				}
 				AfterCalling();
 			} catch(WebException e) {
