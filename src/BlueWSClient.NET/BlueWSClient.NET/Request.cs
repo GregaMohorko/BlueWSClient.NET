@@ -81,16 +81,11 @@ namespace BlueWS
 
 		/// <summary>
 		/// Calls the associated server with the specified action as an asynchronous action.
-		/// <para>If the action is not specified, it will be set to the name of the calling method.</para>
 		/// </summary>
 		/// <param name="action">The name of the action to call.</param>
 		[MethodImpl(MethodImplOptions.NoInlining)]
-		public async Task<T> CallAsyncTask(string action=null)
+		public async Task<T> CallAsyncTask(string action)
 		{
-			if(action == null) {
-				action = GetCallingMethod().Name;
-			}
-
 			NameValueCollection data=BeforeCalling(action);
 
 			try {
