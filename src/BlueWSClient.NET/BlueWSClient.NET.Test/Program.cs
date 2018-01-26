@@ -201,7 +201,7 @@ namespace BlueWS.Test
 
 			// the async version
 			request = new Request<JObject>(webService);
-			response = await request.CallAsyncTask();
+			response = await request.CallAsyncTask(nameof(TestAction0));
 			Debug.Assert(!request.Success);
 			Debug.Assert(!request.NoNetwork);
 			Debug.Assert(request.RawResponse != null);

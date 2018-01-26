@@ -26,8 +26,9 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using BlueWS.Net;
 using Newtonsoft.Json;
+using GM.Utility;
+using BlueWS.Net;
 
 namespace BlueWS
 {
@@ -80,19 +81,6 @@ namespace BlueWS
 		}
 
 		/// <summary>
-		/// Gets the method that called the current method where this method is used. This does not work when used in async methods.
-		/// <para>
-		/// Note that because of compiler optimization, you should add <see cref="MethodImplAttribute"/> to the method where this method is used and use the <see cref="MethodImplOptions.NoInlining"/> value.
-		/// </para>
-		/// </summary>
-		[MethodImpl(MethodImplOptions.NoInlining)]
-		public static System.Reflection.MethodBase GetCallingMethod()
-		{
-			// FIXME GM.Utility
-			return new System.Diagnostics.StackFrame(2, false)?.GetMethod();
-		}
-
-		/// <summary>
 		/// Calls the associated server with the specified action.
 		/// <para>If the action is not specified, it will be set to the name of the calling method.</para>
 		/// </summary>
@@ -101,7 +89,7 @@ namespace BlueWS
 		public T Call(string action = null)
 		{
 			if(action == null) {
-				action = GetCallingMethod().Name;
+				action = ReflectionUtility.GetCallingMethod().Name;
 			}
 
 			NameValueCollection data = BeforeCalling(action);
