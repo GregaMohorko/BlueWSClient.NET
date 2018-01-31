@@ -56,7 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BlueWSClient.NET\BlueWSClient.NET.csproj">
-      <Project>{42216f1c-4959-4358-b153-6307083d1404}</Project>
+      <Project>{dc269351-3713-43ee-80b3-fd3bfe65851f}</Project>
       <Name>BlueWSClient.NET</Name>
     </ProjectReference>
   </ItemGroup>
