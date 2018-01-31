@@ -45,6 +45,6 @@ YourClass response = request.Call("TestAction");
 
 Grega Mohorko ([www.mohorko.info](https://www.mohorko.info))
 
-Copyright (c) 2017 Grega Mohorko
+Copyright (c) 2018 Grega Mohorko
 
 [Apache License 2.0](./LICENSE)
