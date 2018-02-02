@@ -28,7 +28,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using GM.Utility;
-using BlueWS.Net;
+using GM.Utility.Net;
 
 namespace BlueWS
 {
@@ -97,7 +97,7 @@ namespace BlueWS
 			try {
 				string address = WebService.ServerAddress;
 				HttpMethod httpMethod = WebService.HttpMethod;
-				using(var webClient = new BlueWebClient()) {
+				using(var webClient = new GMWebClient()) {
 					RawResponse = webClient.UploadValues(address, data, httpMethod);
 				}
 				AfterCalling();
@@ -126,7 +126,7 @@ namespace BlueWS
 			try {
 				string address = WebService.ServerAddress;
 				HttpMethod httpMethod = WebService.HttpMethod;
-				using(var webClient = new BlueWebClient()) {
+				using(var webClient = new GMWebClient()) {
 					RawResponse = await webClient.UploadValuesAsyncTask(address, data, httpMethod);
 				}
 				AfterCalling();

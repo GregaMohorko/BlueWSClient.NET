@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BlueWS.Net;
+using GM.Utility.Net;
 using BlueWS.Requests;
 using Newtonsoft.Json.Linq;
 
