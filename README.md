@@ -16,14 +16,14 @@ var webService = new WebService("https://www.myserver.com/", HttpMethod.Get);
 Getting the response for an action *TestAction*:
 ```C#
 var request = new Request<JObject>(webService);
-JObject response = request.Call();
+JObject response = request.Call("TestAction");
 ```
 
 The above example was synchronous and blocked the calling thread.
 
 The asynchronous call looks like this:
 ```C#
-JObject response = await request.CallAsyncTask(nameof(TestActionAsyncTask));
+JObject response = await request.CallAsync(nameof(TestActionAsync));
 ```
 
 To send parameters to the server, add them to the ```Parameter``` property of the request before calling:

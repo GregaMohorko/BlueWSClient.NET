@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>BlueWS</AssemblyName>
     <RootNamespace>BlueWS</RootNamespace>
-    <Version>1.2.1.0</Version>
+    <Version>1.2.2.0</Version>
 	<Title>BlueWS</Title>
     <Authors>Grega Mohorko</Authors>
     <Company>Grega Mohorko</Company>
@@ -14,9 +14,9 @@
     <PackageProjectUrl>https://github.com/GregaMohorko/BlueWSClient.NET</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/GregaMohorko/BlueWS/master/Documentation/Icon/BlueWS.ico</PackageIconUrl>
     <PackageTags>EntityFramework Entity Database JSON Criteria Expression TableInheritance ManyToOne OneToMany ManyToMany MySQL</PackageTags>
-    <PackageReleaseNotes>Used web client from GM.Utility.</PackageReleaseNotes>
-    <AssemblyVersion>1.2.1.0</AssemblyVersion>
-    <FileVersion>1.2.1.0</FileVersion>
+    <PackageReleaseNotes>Added support for actions ending with "Async" phrase (was just "AsyncTask" before).</PackageReleaseNotes>
+    <AssemblyVersion>1.2.2.0</AssemblyVersion>
+    <FileVersion>1.2.2.0</FileVersion>
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>GM.StrongNameKey.snk</AssemblyOriginatorKeyFile>
@@ -29,11 +29,12 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netstandard2.0\BlueWS.xml</DocumentationFile>
+    <NoWarn />
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GM.Utility" Version="1.2.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="GM.Utility" Version="1.2.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
   </ItemGroup>
 
 </Project>

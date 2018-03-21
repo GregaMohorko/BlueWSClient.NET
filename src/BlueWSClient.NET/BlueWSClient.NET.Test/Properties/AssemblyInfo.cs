@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("BlueWSClient.NET.Test")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Grega Mohorko")]
 [assembly: AssemblyProduct("BlueWSClient.NET.Test")]
 [assembly: AssemblyCopyright("Copyright © Grega Mohorko 2017")]
 [assembly: AssemblyTrademark("")]

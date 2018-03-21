@@ -113,15 +113,29 @@ namespace BlueWS
 		/// <para> If the action ends with the phrase "AsyncTask", that phrase will be cut out. So you can use <c>nameof</c>.</para>
 		/// </summary>
 		/// <param name="action">The name of the action to call. If it ends with the phrase "AsyncTask", that phrase will be cut out. So you can use <c>nameof</c>.</param>
-		[MethodImpl(MethodImplOptions.NoInlining)]
-		public async Task<T> CallAsyncTask(string action)
+		[Obsolete("This method is obsolete. Please use CallAsync instead.",false)]
+		public Task<T> CallAsyncTask(string action)
+		{
+			// FIXME obsolete 2018-03-21
+			return CallAsync(action);
+		}
+
+		/// <summary>
+		/// Calls the associated server with the specified action as an asynchronous action.
+		/// <para> If the action ends with the phrase "Async" or "AsyncTask", that phrase will be cut out. So you can use <c>nameof</c>.</para>
+		/// </summary>
+		/// <param name="action">The name of the action to call. If it ends with the phrase "Async" or "AsyncTask", that phrase will be cut out. So you can use <c>nameof</c>.</param>
+		public async Task<T> CallAsync(string action)
 		{
 			if(action.EndsWith("AsyncTask")) {
 				// "AsyncTask".Length == 9
 				action = action.Substring(0, action.Length - 9);
+			} else if(action.EndsWith("Async")) {
+				// "Async".Length == 5
+				action = action.Substring(0, action.Length - 5);
 			}
 
-			NameValueCollection data=BeforeCalling(action);
+			NameValueCollection data = BeforeCalling(action);
 
 			try {
 				string address = WebService.ServerAddress;
@@ -133,7 +147,7 @@ namespace BlueWS
 			} catch(WebException e) {
 				OnWebException(e);
 			}
-			
+
 			return Response;
 		}
 
