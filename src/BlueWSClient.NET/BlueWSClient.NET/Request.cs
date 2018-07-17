@@ -83,6 +83,7 @@ namespace BlueWS
 		/// <summary>
 		/// Calls the associated server with the specified action.
 		/// <para>If the action is not specified, it will be set to the name of the calling method.</para>
+		/// <para>You should add the following attribute to the method that is calling this: [MethodImpl(MethodImplOptions.NoInlining)]</para>
 		/// </summary>
 		/// <param name="action">The name of the action to call.</param>
 		[MethodImpl(MethodImplOptions.NoInlining)]
