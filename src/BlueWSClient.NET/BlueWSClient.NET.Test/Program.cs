@@ -14,11 +14,11 @@ namespace BlueWS.Test
 	class Program
 	{
 		// please set your own server address
-		private const string SERVER_ADDRESS = "http://psis2.mohorko.info/test/";
+		private const string SERVER_ADDRESS = "https://bluews.mohorko.info/test/";
 
 		static void Main(string[] args)
 		{
-			WebService webService = new WebService(SERVER_ADDRESS,HttpMethod.GET,false);
+			var webService = new WebService(SERVER_ADDRESS,HttpMethod.GET,false);
 
 			// examples below are testing actions in the BlueWS repository in the /test folder
 			// you can test your own actions in the same manner
@@ -53,8 +53,8 @@ namespace BlueWS.Test
 
 			// the async version
 			{
-				Request<JObject> request = new Request<JObject>(webService);
-				JObject response = await request.CallAsyncTask("TestAction1");
+				var request = new Request<JObject>(webService);
+				JObject response = await request.CallAsync("TestAction1");
 				CheckResult(request, response);
 				string message = response.Value<string>("Message");
 				Debug.Assert(message == "Hello world!");
@@ -67,7 +67,7 @@ namespace BlueWS.Test
 			Console.WriteLine("Testing Action 2 ...");
 			Console.WriteLine();
 
-			Request<JObject> request = new Request<JObject>(webService);
+			var request = new Request<JObject>(webService);
 			JObject response = request.Call();
 			Debug.Assert(!request.Success);
 			Debug.Assert(!request.NoNetwork);
@@ -82,7 +82,7 @@ namespace BlueWS.Test
 			Console.WriteLine("Testing Action 3 ...");
 			Console.WriteLine();
 
-			Request<JObject> request = new Request<JObject>(webService);
+			var request = new Request<JObject>(webService);
 			JObject response = request.Call();
 			CheckResult(request, response);
 			string explanation = response.Value<string>("Explanation");
@@ -95,7 +95,7 @@ namespace BlueWS.Test
 			Console.WriteLine("Testing Action 4 ...");
 			Console.WriteLine();
 
-			PostLoginRequest<JObject> request = new PostLoginRequest<JObject>(webService);
+			var request = new PostLoginRequest<JObject>(webService);
 			JObject response = request.Call();
 			CheckResult(request, response);
 			string message = response.Value<string>("Message");
@@ -110,7 +110,7 @@ namespace BlueWS.Test
 			Console.WriteLine("Testing Action 5 ...");
 			Console.WriteLine();
 
-			PostLoginRequest<JObject> request = new PostLoginRequest<JObject>(webService);
+			var request = new PostLoginRequest<JObject>(webService);
 			JObject response = request.Call();
 			Debug.Assert(!request.Success);
 			Debug.Assert(!request.NoNetwork);
@@ -127,7 +127,7 @@ namespace BlueWS.Test
 			Console.WriteLine("Testing Action 6 ...");
 			Console.WriteLine();
 
-			PostLoginRequest<JObject> request = new PostLoginRequest<JObject>(webService);
+			var request = new PostLoginRequest<JObject>(webService);
 			JObject response = request.Call();
 			CheckResult(request, response);
 			string message = response.Value<string>("Message");
@@ -142,7 +142,7 @@ namespace BlueWS.Test
 			Console.WriteLine("Testing Action 7 ...");
 			Console.WriteLine();
 
-			Request<JObject> request = new Request<JObject>(webService);
+			var request = new Request<JObject>(webService);
 			JObject response = request.Call();
 			CheckResult(request, response);
 			int actionParameter = response.Value<int>("ActionParameter");
@@ -156,7 +156,7 @@ namespace BlueWS.Test
 			Console.WriteLine();
 
 			// sending no data
-			Request<JObject> request = new Request<JObject>(webService);
+			var request = new Request<JObject>(webService);
 			JObject response = request.Call();
 			CheckResult(request, response);
 			Debug.Assert(response.Count == 1);
@@ -172,16 +172,22 @@ namespace BlueWS.Test
 			request.Parameters.Add("SentInteger",sentInteger);
 			response = request.Call();
 			CheckResult(request, response);
-			int returnedInteger = response.Value<int>("data");
+			dataProperty = (JProperty)response.AsJEnumerable().Single();
+			var dataObject = (JObject)dataProperty.Value;
+			var dataObjectContent = (JProperty)dataObject.AsJEnumerable().Single();
+			var dataObjectContentValue = (JValue)dataObjectContent.Value;
+			int returnedInteger = dataObjectContentValue.Value<int>();
 			Debug.Assert(returnedInteger == sentInteger);
 
 			// sending three integers
 			request = new Request<JObject>(webService);
-			List<int> sentIntegers = new List<int>(){ 27, 42, 67 };
+			var sentIntegers = new List<int>(){ 27, 42, 67 };
 			sentIntegers.ForEach(i => request.Parameters.Add(i.ToString(),i));
 			response = request.Call();
 			CheckResult(request, response);
-			List<int> returnedIntegers = response.Value<JArray>("data").Select(jt => jt.Value<int>()).ToList();
+			dataProperty = (JProperty)response.AsJEnumerable().Single();
+			var dataEnumerable=dataProperty.Value.AsJEnumerable();
+			List<int> returnedIntegers = dataEnumerable.Cast<JProperty>().Select(jp => jp.Value.Value<int>()).ToList();
 			Debug.Assert(returnedIntegers.SequenceEqual(sentIntegers));
 		}
 
@@ -192,7 +198,7 @@ namespace BlueWS.Test
 			Console.WriteLine();
 
 			// the sync version
-			Request<JObject> request = new Request<JObject>(webService);
+			var request = new Request<JObject>(webService);
 			JObject response = request.Call();
 			Debug.Assert(!request.Success);
 			Debug.Assert(!request.NoNetwork);
@@ -201,7 +207,7 @@ namespace BlueWS.Test
 
 			// the async version
 			request = new Request<JObject>(webService);
-			response = await request.CallAsyncTask(nameof(TestAction0));
+			response = await request.CallAsync(nameof(TestAction0));
 			Debug.Assert(!request.Success);
 			Debug.Assert(!request.NoNetwork);
 			Debug.Assert(request.RawResponse != null);
