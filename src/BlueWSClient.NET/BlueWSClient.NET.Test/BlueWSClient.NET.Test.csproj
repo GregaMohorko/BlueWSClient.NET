@@ -33,8 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GM.Utility, Version=1.2.7.0, Culture=neutral, PublicKeyToken=a1ae152199607549, processorArchitecture=MSIL">
-      <HintPath>..\packages\GM.Utility.1.2.7\lib\netstandard2.0\GM.Utility.dll</HintPath>
+    <Reference Include="GM.Utility, Version=1.2.8.0, Culture=neutral, PublicKeyToken=a1ae152199607549, processorArchitecture=MSIL">
+      <HintPath>..\packages\GM.Utility.1.2.8\lib\netstandard2.0\GM.Utility.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>

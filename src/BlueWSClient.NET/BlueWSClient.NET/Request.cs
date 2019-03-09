@@ -219,6 +219,11 @@ namespace BlueWS
 		/// <param name="rawResponse">Raw server response to parse.</param>
 		protected virtual T ParseServerResponse(string rawResponse)
 		{
+			if(rawResponse == JsonConvert.Null) {
+				if(!typeof(T).IsValueType) {
+					return default(T);
+				}
+			}
 			return JsonConvert.DeserializeObject<T>(rawResponse);
 		}
 
