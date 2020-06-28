@@ -4,23 +4,28 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>BlueWS</AssemblyName>
     <RootNamespace>BlueWS</RootNamespace>
-    <Version>1.2.3.0</Version>
+    <Version>1.3.0.0</Version>
 	<Title>BlueWS</Title>
-    <Authors>Grega Mohorko</Authors>
-    <Company>Grega Mohorko</Company>
+    <Authors>Gregor Mohorko</Authors>
+    <Company>Gregor Mohorko</Company>
     <Description>A client library for BlueWS library. Includes logic and utility for calling BlueWS web service actions.</Description>
-    <Copyright>Copyright © Grega Mohorko 2019</Copyright>
-    <PackageLicenseUrl>https://github.com/GregaMohorko/BlueWSClient.NET/blob/master/LICENSE</PackageLicenseUrl>
+    <Copyright>Copyright © Grega Mohorko 2020</Copyright>
     <PackageProjectUrl>https://github.com/GregaMohorko/BlueWSClient.NET</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/GregaMohorko/BlueWS/master/Documentation/Icon/BlueWS.ico</PackageIconUrl>
     <PackageTags>EntityFramework Entity Database JSON Criteria Expression TableInheritance ManyToOne OneToMany ManyToMany MySQL</PackageTags>
-    <PackageReleaseNotes>Added support for parsing null json value response.</PackageReleaseNotes>
-    <AssemblyVersion>1.2.3.0</AssemblyVersion>
-    <FileVersion>1.2.3.0</FileVersion>
+    <PackageReleaseNotes>Enabled SourceLink.</PackageReleaseNotes>
+    <AssemblyVersion>1.3.0.0</AssemblyVersion>
+    <FileVersion>1.3.0.0</FileVersion>
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>GM.StrongNameKey.snk</AssemblyOriginatorKeyFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageIcon>BlueWS Icon.png</PackageIcon>
+    <RepositoryUrl>https://github.com/GregaMohorko/BlueWSClient.NET</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -33,8 +38,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GM.Utility" Version="1.2.8" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="GM.Utility" Version="1.3.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\Documentation\Icon\BlueWS Icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
