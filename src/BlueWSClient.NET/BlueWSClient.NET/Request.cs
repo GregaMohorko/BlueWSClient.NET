@@ -113,10 +113,11 @@ namespace BlueWS
 		/// <para> If the action ends with the phrase "AsyncTask", that phrase will be cut out. So you can use <c>nameof</c>.</para>
 		/// </summary>
 		/// <param name="action">The name of the action to call. If it ends with the phrase "AsyncTask", that phrase will be cut out. So you can use <c>nameof</c>.</param>
-		[Obsolete("This method is obsolete. Please use CallAsync instead.",false)]
+		[Obsolete("This method is obsolete, it will be removed in the next release. Please use CallAsync instead.",false)]
 		public Task<T> CallAsyncTask(string action)
 		{
-			// FIXME obsolete 2018-03-21
+			// FIXME obsolete v1.3.0.0
+			// 2020-06-28
 			return CallAsync(action);
 		}
 
