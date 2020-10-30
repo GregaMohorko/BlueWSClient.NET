@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2018 Grega Mohorko
+   Copyright 2020 Gregor Mohorko
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -15,15 +15,15 @@
 
 Project: BlueWSClient.NET
 Created: 2018-1-7
-Author: GregaMohorko
+Author: Gregor Mohorko
 */
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using GM.Utility.Net;
 
 namespace BlueWS
 {

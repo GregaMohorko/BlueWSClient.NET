@@ -28,7 +28,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using GM.Utility;
+using System.Net.Http;
 using GM.Utility.Net;
+using HttpMethod = System.Net.Http.HttpMethod;
+using System.Threading;
 
 namespace BlueWS
 {
@@ -80,11 +83,14 @@ namespace BlueWS
 			Parameters = new Dictionary<string, object>();
 		}
 
+		// FIXME obsolete v1.3.1.0
+		// 2020-10-30
 		/// <summary>
 		/// Calls the associated server with the specified action.
 		/// <para>If the action is not specified, it will be set to the name of the calling method. In that case, you should add the following attribute to the method that is calling this: [MethodImpl(MethodImplOptions.NoInlining)]</para>
 		/// </summary>
 		/// <param name="action">The name of the action to call.</param>
+		[Obsolete("This method is obsolete and will be removed in the next release. Please use CallAsync instead.", false)]
 		[MethodImpl(MethodImplOptions.NoInlining)]
 		public T Call(string action = null)
 		{
@@ -92,17 +98,26 @@ namespace BlueWS
 				action = ReflectionUtility.GetCallingMethod().Name;
 			}
 
-			NameValueCollection data = BeforeCalling(action);
+			var nameValueCollection = new NameValueCollection();
+			{
+				Dictionary<string, string> data = BeforeCalling(action);
+				foreach(KeyValuePair<string, string> kvp in data) {
+					nameValueCollection.Add(kvp.Key, kvp.Value);
+				}
+			}
 
 			try {
 				string address = WebService.ServerAddress;
-				HttpMethod httpMethod = WebService.HttpMethod;
+				GM.Utility.Net.HttpMethod httpMethod = WebService.HttpMethod.Method.ToUpperInvariant() == "GET" ? GM.Utility.Net.HttpMethod.GET : (WebService.HttpMethod.Method.ToUpperInvariant() == "POST" ? GM.Utility.Net.HttpMethod.POST : throw new ArgumentException("Unsupported http method."));
 				using(var webClient = new GMWebClient()) {
-					RawResponse = webClient.UploadValues(address, data, httpMethod);
+					RawResponse = webClient.UploadValues(address, nameValueCollection, httpMethod);
 				}
 				AfterCalling();
 			} catch(WebException e) {
-				OnWebException(e);
+				NoNetwork = true;
+				if(WebService.IsThrowable) {
+					throw e;
+				}
 			}
 
 			return Response;
@@ -113,12 +128,12 @@ namespace BlueWS
 		/// <para> If the action ends with the phrase "AsyncTask", that phrase will be cut out. So you can use <c>nameof</c>.</para>
 		/// </summary>
 		/// <param name="action">The name of the action to call. If it ends with the phrase "AsyncTask", that phrase will be cut out. So you can use <c>nameof</c>.</param>
-		[Obsolete("This method is obsolete, it will be removed in the next release. Please use CallAsync instead.",false)]
+		[Obsolete("This method is obsolete, it will be removed in the next release. Please use CallAsync instead.",true)]
 		public Task<T> CallAsyncTask(string action)
 		{
-			// FIXME obsolete v1.3.0.0
-			// 2020-06-28
-			return CallAsync(action);
+			// FIXME obsolete v1.3.1.0
+			// 2020-10-30
+			return CallAsync(action, CancellationToken.None);
 		}
 
 		/// <summary>
@@ -126,54 +141,60 @@ namespace BlueWS
 		/// <para> If the action ends with the phrase "Async" or "AsyncTask", that phrase will be cut out. So you can use <c>nameof</c>.</para>
 		/// </summary>
 		/// <param name="action">The name of the action to call. If it ends with the phrase "Async" or "AsyncTask", that phrase will be cut out. So you can use <c>nameof</c>.</param>
-		public async Task<T> CallAsync(string action)
+		public Task<T> CallAsync(string action)
 		{
-			if(action.EndsWith("AsyncTask")) {
-				// "AsyncTask".Length == 9
-				action = action.Substring(0, action.Length - 9);
-			} else if(action.EndsWith("Async")) {
+			return CallAsync(action, CancellationToken.None);
+		}
+
+		/// <summary>
+		/// Calls the associated server with the specified action as an asynchronous action.
+		/// <para> If the action ends with the phrase "Async" or "AsyncTask", that phrase will be cut out. So you can use <c>nameof</c>.</para>
+		/// </summary>
+		/// <param name="action">The name of the action to call. If it ends with the phrase "Async" or "AsyncTask", that phrase will be cut out. So you can use <c>nameof</c>.</param>
+		/// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+		public async Task<T> CallAsync(string action, CancellationToken cancellationToken)
+		{
+			if(action.EndsWith("Async")) {
 				// "Async".Length == 5
 				action = action.Substring(0, action.Length - 5);
+			} else if(action.EndsWith("AsyncTask")) {
+				// "AsyncTask".Length == 9
+				action = action.Substring(0, action.Length - 9);
 			}
 
-			NameValueCollection data = BeforeCalling(action);
+			Dictionary<string, string> data = BeforeCalling(action);
 
 			try {
 				string address = WebService.ServerAddress;
 				HttpMethod httpMethod = WebService.HttpMethod;
-				using(var webClient = new GMWebClient()) {
-					RawResponse = await webClient.UploadValuesAsyncTask(address, data, httpMethod);
+				using(var webClient = new GMHttpClient()) {
+					RawResponse = await webClient.UploadValuesAsync(address, data, httpMethod, cancellationToken);
 				}
 				AfterCalling();
-			} catch(WebException e) {
-				OnWebException(e);
+			} catch(HttpRequestException) {
+				NoNetwork = true;
+				if(WebService.IsThrowable) {
+					throw;
+				}
 			}
 
 			return Response;
-		}
-
-		private void OnWebException(WebException e)
-		{
-			NoNetwork = true;
-			if(WebService.IsThrowable) {
-				throw e;
-			}
 		}
 
 		/// <summary>
 		/// Resets all the request info and serializes the parameters to prepare the data to be sent to the server.
 		/// </summary>
 		/// <param name="action">The action to be called.</param>
-		private NameValueCollection BeforeCalling(string action)
+		private Dictionary<string, string> BeforeCalling(string action)
 		{
 			Action = action;
 			// set it to false, and only set it to true after, when everything is ok
 			Success = false;
 			RawResponse = null;
-			Response = default(T);
+			Response = default;
 			NoNetwork = false;
 
-			var data = new NameValueCollection
+			var data = new Dictionary<string, string>
 			{
 				{ "action", action }
 			};
@@ -222,7 +243,7 @@ namespace BlueWS
 		{
 			if(rawResponse == JsonConvert.Null) {
 				if(!typeof(T).IsValueType) {
-					return default(T);
+					return default;
 				}
 			}
 			return JsonConvert.DeserializeObject<T>(rawResponse);
