@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2018 Grega Mohorko
+   Copyright 2022 Gregor Mohorko
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -15,19 +15,13 @@
 
 Project: BlueWSClient.NET
 Created: 2018-1-7
-Author: GregaMohorko
+Author: Gregor Mohorko
 */
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Net;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using GM.Utility;
 using System.Net.Http;
 using GM.Utility.Net;
 using HttpMethod = System.Net.Http.HttpMethod;
@@ -99,7 +93,8 @@ namespace BlueWS
 		/// </summary>
 		/// <param name="action">The name of the action to call. If it ends with the phrase "Async" or "AsyncTask", that phrase will be cut out. So you can use <c>nameof</c>.</param>
 		/// <param name="cancellationToken">The cancellation token to cancel operation.</param>
-		public async Task<T> CallAsync(string action, CancellationToken cancellationToken)
+		/// <param name="httpClient">The http client. If null, it will create a new instance of it.</param>
+		public async Task<T> CallAsync(string action, CancellationToken cancellationToken, HttpClient httpClient = null)
 		{
 			if(action.EndsWith("Async")) {
 				// "Async".Length == 5
@@ -114,7 +109,7 @@ namespace BlueWS
 			try {
 				string address = WebService.ServerAddress;
 				HttpMethod httpMethod = WebService.HttpMethod;
-				using(var webClient = new GMHttpClient()) {
+				using(var webClient = new GMHttpClient(httpClient, disposeHttpClient: httpClient == null)) {
 					RawResponse = await webClient.UploadValuesAsync(address, data, httpMethod, cancellationToken);
 				}
 				AfterCalling();
