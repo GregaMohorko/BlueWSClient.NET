@@ -83,59 +83,6 @@ namespace BlueWS
 			Parameters = new Dictionary<string, object>();
 		}
 
-		// FIXME obsolete v1.3.1.0
-		// 2020-10-30
-		/// <summary>
-		/// Calls the associated server with the specified action.
-		/// <para>If the action is not specified, it will be set to the name of the calling method. In that case, you should add the following attribute to the method that is calling this: [MethodImpl(MethodImplOptions.NoInlining)]</para>
-		/// </summary>
-		/// <param name="action">The name of the action to call.</param>
-		[Obsolete("This method is obsolete and will be removed in the next release. Please use CallAsync instead.", false)]
-		[MethodImpl(MethodImplOptions.NoInlining)]
-		public T Call(string action = null)
-		{
-			if(action == null) {
-				action = ReflectionUtility.GetCallingMethod().Name;
-			}
-
-			var nameValueCollection = new NameValueCollection();
-			{
-				Dictionary<string, string> data = BeforeCalling(action);
-				foreach(KeyValuePair<string, string> kvp in data) {
-					nameValueCollection.Add(kvp.Key, kvp.Value);
-				}
-			}
-
-			try {
-				string address = WebService.ServerAddress;
-				GM.Utility.Net.HttpMethod httpMethod = WebService.HttpMethod.Method.ToUpperInvariant() == "GET" ? GM.Utility.Net.HttpMethod.GET : (WebService.HttpMethod.Method.ToUpperInvariant() == "POST" ? GM.Utility.Net.HttpMethod.POST : throw new ArgumentException("Unsupported http method."));
-				using(var webClient = new GMWebClient()) {
-					RawResponse = webClient.UploadValues(address, nameValueCollection, httpMethod);
-				}
-				AfterCalling();
-			} catch(WebException e) {
-				NoNetwork = true;
-				if(WebService.IsThrowable) {
-					throw e;
-				}
-			}
-
-			return Response;
-		}
-
-		/// <summary>
-		/// Calls the associated server with the specified action as an asynchronous action.
-		/// <para> If the action ends with the phrase "AsyncTask", that phrase will be cut out. So you can use <c>nameof</c>.</para>
-		/// </summary>
-		/// <param name="action">The name of the action to call. If it ends with the phrase "AsyncTask", that phrase will be cut out. So you can use <c>nameof</c>.</param>
-		[Obsolete("This method is obsolete, it will be removed in the next release. Please use CallAsync instead.",true)]
-		public Task<T> CallAsyncTask(string action)
-		{
-			// FIXME obsolete v1.3.1.0
-			// 2020-10-30
-			return CallAsync(action, CancellationToken.None);
-		}
-
 		/// <summary>
 		/// Calls the associated server with the specified action as an asynchronous action.
 		/// <para> If the action ends with the phrase "Async" or "AsyncTask", that phrase will be cut out. So you can use <c>nameof</c>.</para>
