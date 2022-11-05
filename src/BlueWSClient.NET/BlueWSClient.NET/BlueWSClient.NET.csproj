@@ -19,7 +19,8 @@
 	<Description>A client library for BlueWS library. Includes logic and utility for calling BlueWS web service actions.</Description>
 	<Copyright>Copyright © Grega Mohorko 2022</Copyright>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	<PackageReleaseNotes>Using GMHttpClient instead of GMWebClient.</PackageReleaseNotes>
+	<PackageReleaseNotes>Remove obsolete things.
+Add ability to specify custom http client.</PackageReleaseNotes>
 	<RepositoryUrl>https://github.com/GregaMohorko/BlueWSClient.NET</RepositoryUrl>
 	<RepositoryType>Git</RepositoryType>
 	<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
