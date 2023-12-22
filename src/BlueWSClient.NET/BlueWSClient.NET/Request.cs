@@ -26,6 +26,9 @@ using System.Net.Http;
 using GM.Utility.Net;
 using HttpMethod = System.Net.Http.HttpMethod;
 using System.Threading;
+using System.Collections.Specialized;
+using System.Linq;
+using System.Net;
 
 namespace BlueWS
 {
@@ -110,7 +113,15 @@ namespace BlueWS
 				string address = WebService.ServerAddress;
 				HttpMethod httpMethod = WebService.HttpMethod;
 				using(var webClient = new GMHttpClient(httpClient, disposeHttpClient: httpClient == null)) {
-					RawResponse = await webClient.UploadValuesAsync(address, data, httpMethod, cancellationToken);
+					if(httpMethod == HttpMethod.Get) {
+						RawResponse = await webClient.SendGet(address, data, cancellationToken).ConfigureAwait(false);
+					} else if(httpMethod == HttpMethod.Post) {
+						var encodedItems = data.Select(x => $"{WebUtility.UrlEncode(x.Key)}={WebUtility.UrlEncode(x.Value)}");
+						var httpContent = new StringContent(string.Join("&", encodedItems), null, "application/x-www-form-urlencoded");
+						RawResponse = await webClient.Send(address, HttpMethod.Post, httpContent, cancellationToken).ConfigureAwait(false);
+					} else {
+						throw new Exception($"HttpMethod {httpMethod} is not allowed.");
+					}
 				}
 				AfterCalling();
 			} catch(HttpRequestException) {
